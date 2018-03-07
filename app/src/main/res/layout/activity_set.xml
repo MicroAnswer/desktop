@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@android:color/black"
+      android:fitsSystemWindows="true"
+      android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/set"
+        app:titleTextColor="#FFF"/>
+  </LinearLayout>
+
+  <cn.microanswer.desktop.Group
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:title="常用">
+
+    <cn.microanswer.desktop.Cell
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        app:desc="重新加载所有安装的应用"
+        app:titLe="刷新"
+        app:underLine="1px">
+
+    </cn.microanswer.desktop.Cell>
+
+    <cn.microanswer.desktop.Cell
+        android:id="@+id/changeBg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        app:desc="切换一张新的主页背景"
+        app:titLe="更换壁纸"
+        app:underLine="0dp">
+
+      <ImageView
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:layout_marginRight="15dp"
+          android:src="@drawable/ic_icon_right"/>
+
+    </cn.microanswer.desktop.Cell>
+  </cn.microanswer.desktop.Group>
+
+  <cn.microanswer.desktop.Group
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:title="关于">
+
+    <cn.microanswer.desktop.Cell
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        app:desc="v1.0.0"
+        app:titLe="版本更新">
+
+    </cn.microanswer.desktop.Cell>
+
+  </cn.microanswer.desktop.Group>
+
+</LinearLayout>

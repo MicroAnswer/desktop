@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <ImageView
+      android:layout_width="55dp"
+      android:layout_height="55dp"
+      android:contentDescription="@string/icondescription"
+      android:src="@mipmap/ic_launcher"/>
+
+  <TextView
+      android:layout_width="60dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:text="Wechat"
+      android:maxLines="1"
+      android:maxWidth="60dp"
+      android:textColor="#222"
+      android:textAlignment="center"
+      android:background="@drawable/apptitlebg"
+      android:gravity="center"
+      android:visibility="gone"/>
+
+</merge>

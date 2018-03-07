@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1">
+
+    <!-- RecyclerView -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="ifContentScrolls"/>
+
+    <LinearLayout
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+      <ProgressBar
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:textColor="#FFF"
+          android:layout_marginTop="4dp"
+          android:gravity="center"
+          android:layout_height="wrap_content"
+          android:text="加载中..."/>
+    </LinearLayout>
+  </FrameLayout>
+
+  <!-- 底部快捷的5个按钮 -->
+  <LinearLayout
+      android:id="@+id/fastapp"
+      android:layout_width="match_parent"
+      android:layout_height="90dp"
+      android:background="@color/dockbg"
+      android:orientation="horizontal">
+
+    <cn.microanswer.desktop.AppItemView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_weight="1"/>
+
+    <cn.microanswer.desktop.AppItemView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_weight="1"/>
+
+    <cn.microanswer.desktop.AppItemView
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <cn.microanswer.desktop.AppItemView
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+  </LinearLayout>
+
+</LinearLayout>
