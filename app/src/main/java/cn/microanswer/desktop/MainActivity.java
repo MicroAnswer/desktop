@@ -21,6 +21,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -98,14 +100,26 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp{
             return queryAppInfo(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String saf) {
-                    if (saf.contains("tumblr")) {
-                        return false;
-                    } else if (saf.contains("timbloade")) {
-                        return false;
-                    } else if (saf.contains("launch")) {
-                        return false;
-                    } else if (saf.contains("cn.microanswer.desktop")){
-                        return false;
+                    try {
+                        JSONObject object = new JSONObject(saf);
+                        String name = object.getString("name");
+                        String pkg = object.getString("pkg");
+
+                        if (pkg.contains("tumblr")) {
+                            return false;
+                        } else if (pkg.contains("timbloade")) {
+                            return false;
+                        } else if (pkg.contains("launch")) {
+                            return false;
+                        } else if (pkg.contains("cn.microanswer.desktop")) {
+                            return false;
+                        } else if ("下载".equals(name)) {
+                            return false;
+                        } else if (name.contains("搜狗")) {
+                            return false;
+                        }
+                    }catch (Exception e) {
+                        Log.i("MainActivity", e.getMessage());
                     }
                     return true;
                 }
@@ -141,13 +155,6 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp{
             String pkgName = reInfo.activityInfo.packageName; // 获得应用程序的包名
 
             String saf = pkgName.toLowerCase();
-
-            if (filenameFilter != null) {
-                if (!filenameFilter.accept(null, saf)) {
-                    continue;
-                }
-            }
-
             String appLabel = (String) reInfo.loadLabel(pm); // 获得应用程序的Label
             Drawable icon = reInfo.loadIcon(pm); // 获得应用程序图标
             Log.i("size", "icon, class=" + icon.getClass().getSimpleName());
@@ -157,6 +164,13 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp{
             appInfo.setName(appLabel);
             appInfo.setPkg(pkgName);
             appInfo.setIcon(icon);
+
+            if (filenameFilter != null) {
+                if (!filenameFilter.accept(null, appInfo.toString())) {
+                    continue;
+                }
+            }
+
             appItems.add(appInfo); // 添加至列表中
         }
 
