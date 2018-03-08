@@ -31,7 +31,7 @@ public class MLiveWallpaper extends WallpaperService {
         private Context context;
 
         private Bitmap bitmap;
-        private Rect dst;
+        private Rect dst, dst2;
 
 
         private boolean running = false; // 标记是否在绘制
@@ -58,6 +58,7 @@ public class MLiveWallpaper extends WallpaperService {
             paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
             paint.setColor(Color.WHITE);
+            paint.setTextSize(20f);
             ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 
             running = true;
@@ -68,6 +69,10 @@ public class MLiveWallpaper extends WallpaperService {
         private int r = 10, g = 10, b = 10;
 
         IntentFilter ifilter = null;
+
+
+        private int moveTime = 60; // 动画时间120毫秒
+        private int current = 0;
 
         private void draw(Canvas canvas, long delay) {
             canvas.drawColor(Color.rgb(r, g, b));
@@ -81,10 +86,30 @@ public class MLiveWallpaper extends WallpaperService {
                     dst.bottom = 2560;
                 }
 
-                canvas.drawBitmap(bitmap, null, dst, paint);
+                if (dst2 == null) {
+                    dst2 = new Rect();
+                    dst2.left = dst.left;
+                    dst2.right = dst.right;
+                    dst2.top = dst.top;
+                    dst2.bottom = dst.bottom;
+                }
 
+                dst2.left = Math.round(dst2.left + ((dst.left - dst2.left) * (current / (float) moveTime)));
+                dst2.top = Math.round(dst2.top + ((dst.top - dst2.top) * (current / (float) moveTime)));
+                dst2.right = dst2.left + 1440;
+                dst2.bottom = dst2.top + 2560;
+                canvas.drawBitmap(bitmap, null, dst2, paint);
+                if (current >= moveTime) {
+                    current = 0;
+                } else {
+                    current += delay;
+                }
             }
 
+            canvas.drawText("x=" + x, 100, 2560 - 60, paint);
+            canvas.drawText("y=" + y, 100, 2560 - 40, paint);
+            canvas.drawText("z=" + z, 100, 2560 - 20, paint);
+            canvas.drawText("delay=" + delay, 100, 2560, paint);
         }
 
         @Override
@@ -135,8 +160,8 @@ public class MLiveWallpaper extends WallpaperService {
                             surfaceHolder.unlockCanvasAndPost(canvas);
                         }
                     }
-                    // 每秒 40 帧
-                    SystemClock.sleep(1000 / 40);
+                    // 每秒 60 帧
+                    SystemClock.sleep(1000 / 60);
                 }
             }
         }
@@ -161,14 +186,14 @@ public class MLiveWallpaper extends WallpaperService {
             y = ny;
             z = nz;
 
-            setDstXY(x * 2.2f, -y * 2.2f);
+            nextXY(x, -y);
         }
 
-        private void setDstXY(float x, float y) {
+        private void nextXY(float x, float y) {
             if (dst != null) {
-                dst.left = Math.round(x);
+                dst.left = Math.round(x * 8);
                 dst.right = 1440 + dst.left;
-                dst.top = Math.round(y);
+                dst.top = Math.round(y * 8);
                 dst.bottom = 2560 + dst.top;
             }
         }
