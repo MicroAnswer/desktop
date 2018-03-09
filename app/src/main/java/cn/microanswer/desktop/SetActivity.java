@@ -14,7 +14,7 @@ import android.view.WindowManager;
  */
 
 public class SetActivity extends AppCompatActivity implements View.OnClickListener {
-    private Cell changeBg;
+    private Cell changeBg, refresh;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +42,17 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
     private void init(){
         changeBg = findViewById(R.id.changeBg);
         changeBg.setOnClickListener(this);
+
+        refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v == changeBg) {
             Util.requestChangeBackground(this);
+        } else if (v == refresh) {
+
         }
     }
 }
