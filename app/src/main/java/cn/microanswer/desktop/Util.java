@@ -7,9 +7,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Environment;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -70,4 +74,30 @@ public class Util {
         //发送设置壁纸的请求
         context.startActivity(chooser);
     }
+
+    /**
+     * 获取配置文件
+     * @param context
+     * @return
+     */
+    public static JSONObject getConfig(Context context) throws Exception{
+        File configFileDir = new File(Environment.getExternalStorageDirectory(), ".desktop");
+        if (!configFileDir.exists()) {
+            if (!configFileDir.mkdirs()) {
+                throw new Exception("配置文件夹创建失败");
+            }
+        }
+
+        File configFile = new File(configFileDir, "config.cfg");
+
+        if (!configFile.exists()) {
+            // 配置文件不存在
+            return new JSONObject();
+        } else {
+            // 配置文件存在;
+            return new JSONObject(Utils.File.readTxtFile(configFile));
+        }
+
+    }
+
 }

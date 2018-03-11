@@ -1,7 +1,10 @@
 package cn.microanswer.desktop;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
@@ -11,9 +14,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.system.Os;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -21,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -30,13 +35,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MainActivity extends Activity implements AppItemView.OnOpenApp{
+public class MainActivity extends Activity implements AppItemView.OnOpenApp {
     private RecyclerView recyclerView;
     private View emptyview;
     private AppItemView[] appItemViews;
 
     private GridLayoutManager layoutManager;
     private GridRecyclerViewAdapter adapter;
+
+    private AppChangeReceiver changeReceiver;
+    private IntentFilter intentFilter;
+
+    private Object config;
 
 
     @Override
@@ -81,14 +91,44 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp{
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        new DataLoader().execute();
+        // 初始化广播接收器
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        intentFilter.addDataScheme("package");
+
+        changeReceiver = new AppChangeReceiver(this);
+        registerReceiver(changeReceiver, intentFilter);
+
+        int i = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (i == PackageManager.PERMISSION_GRANTED) {
+            new DataLoader().execute();
+        } else{
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, 100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                new DataLoader().execute();
+            } else {
+                Utils.UI.alert(this, "授权失败");
+            }
+        }
     }
 
     @Override
     public void doOpen(String pkg) {
         try {
             Util.open(this, pkg);
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, "打不开：" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -97,33 +137,57 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp{
 
         @Override
         protected ArrayList<AppItem> doInBackground(Void... voids) {
-            return queryAppInfo(new FilenameFilter() {
+
+            try {
+                config = Util.getConfig(MainActivity.this);
+
+                if (config != null) {
+                    JSONObject c = (JSONObject) config;
+                    config = c.getJSONArray("hide");
+                }
+            } catch (final Exception e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                config = null;
+            }
+
+            ArrayList<AppItem> s = queryAppInfo(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String saf) {
-                    try {
-                        JSONObject object = new JSONObject(saf);
-                        String name = object.getString("name");
-                        String pkg = object.getString("pkg");
 
-                        if (pkg.contains("tumblr")) {
-                            return false;
-                        } else if (pkg.contains("timbloade")) {
-                            return false;
-                        } else if (pkg.contains("launch")) {
-                            return false;
-                        } else if (pkg.contains("cn.microanswer.desktop")) {
-                            return false;
-                        } else if ("下载".equals(name)) {
-                            return false;
-                        } else if (name.contains("搜狗")) {
-                            return false;
+                    if (config != null && config instanceof JSONArray) {
+                        JSONArray hidelist = (JSONArray) config;
+                        try {
+                            JSONObject object = new JSONObject(saf);
+                            String name = object.getString("name");
+                            String pkg = object.getString("pkg");
+
+                            for (int in = 0; in < hidelist.length(); in++) {
+                                String sd = hidelist.getString(in);
+                                if (name.equals(sd)) {
+                                    return false;
+                                }
+                                if (pkg.equals(sd)) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        } catch (Exception e) {
+                            Log.i("MainActivity", e.getMessage());
                         }
-                    }catch (Exception e) {
-                        Log.i("MainActivity", e.getMessage());
                     }
                     return true;
                 }
             });
+
+            config = null;
+
+            return s;
         }
 
         @Override
@@ -149,8 +213,7 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp{
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         // 通过查询，获得所有ResolveInfo对象.
-        List<ResolveInfo> resolveInfos = pm
-                .queryIntentActivities(mainIntent, 0);
+        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(mainIntent, 0);
         for (ResolveInfo reInfo : resolveInfos) {
             String pkgName = reInfo.activityInfo.packageName; // 获得应用程序的包名
 
@@ -183,9 +246,27 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp{
         return appItems;
     }
 
+    public void addAppItem(AppItem appItem) {
+        adapter.addAppItem(appItem);
+    }
+
+    public void remoAppItem(String packa) {
+        adapter.removeAppItem(packa);
+    }
+
 
     @Override
     public void onBackPressed() {
         //
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(changeReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -21,6 +21,10 @@ public class AppItem {
         this.icon = icon;
     }
 
+    public AppItem(String pkg) {
+        this.pkg = pkg;
+    }
+
     public void setOpenIntent(Intent openIntent) {
         this.openIntent = openIntent;
     }
@@ -51,6 +55,15 @@ public class AppItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AppItem) {
+            AppItem p = (AppItem) obj;
+            return p.pkg.equals(pkg);
+        }
+        return super.equals(obj);
     }
 
     @Override

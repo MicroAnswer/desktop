@@ -7,6 +7,17 @@ import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+
 /**
  * 工具类
  * Created by Microanswer on 2018/1/11.
@@ -79,6 +90,7 @@ public class Utils {
 
         /**
          * 弹出警告框
+         *
          * @param context
          * @param title
          * @param msg
@@ -90,6 +102,7 @@ public class Utils {
 
         /**
          * 弹出警告框
+         *
          * @param context
          * @param title
          * @param msg
@@ -103,6 +116,96 @@ public class Utils {
                     .setPositiveButton("确定", onClickListener).create();
             alertDialog.show();
             return alertDialog;
+        }
+    }
+
+    /**
+     * 文件相关工具类
+     */
+    public static class File {
+
+        public static String readTxtFile(java.io.File file) throws Exception{
+            return readTxtFile(file, "utf-8");
+        }
+
+        public static String readTxtFile(java.io.File file, String charset) throws Exception{
+            FileInputStream fileInputStream = new FileInputStream(file);
+            return Stream.readTxt(fileInputStream, charset);
+        }
+
+        public static String readTxtFile(String gfile, String charset) throws Exception{
+            return readTxtFile(new java.io.File(gfile), charset);
+        }
+
+    }
+
+    /**
+     * 流相关工具类
+     */
+    public static class Stream {
+
+        /**
+         * 输入流copy到输出流
+         *
+         * @param inputStream
+         * @param outputStream
+         */
+        public static void copy(InputStream inputStream, OutputStream outputStream) {
+
+
+            BufferedInputStream inputStream1 = new BufferedInputStream(inputStream);
+            BufferedOutputStream outputStream1 = new BufferedOutputStream(outputStream);
+
+            try {
+                byte[] data = new byte[1024];
+                int datasize = 0;
+
+                while ((datasize = inputStream1.read(data)) != -1) {
+                    outputStream1.write(data, 0, datasize);
+                }
+
+                outputStream1.flush();
+                outputStream.flush();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream1 != null) {
+                        inputStream1.close();
+                    }
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                    if (outputStream1 != null) {
+                        outputStream1.close();
+                    }
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+
+        }
+
+        public static String readTxt(InputStream inputStream, String c) throws Exception{
+            InputStreamReader reader = new InputStreamReader(inputStream, c);
+            BufferedReader reader1 = new BufferedReader(reader);
+
+            StringBuffer stringBuffer = new StringBuffer();
+
+            char[] chars = new char[512];
+            int size = 0;
+
+            while ((size = reader1.read(chars))!=-1){
+                stringBuffer.append(chars, 0, size);
+            }
+
+            reader.close();
+            reader1.close();
+            return stringBuffer.toString();
         }
     }
 

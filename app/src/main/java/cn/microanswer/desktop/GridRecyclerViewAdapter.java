@@ -1,11 +1,11 @@
 package cn.microanswer.desktop;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,6 +43,36 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<GridRecyclerVi
     @Override
     public int getItemCount() {
         return appItems.size();
+    }
+
+    public void addAppItem(AppItem appItem) {
+        if (appItems == null) {
+            appItems = new ArrayList<>();
+            appItems.add(appItem);
+            notifyDataSetChanged();
+        } else {
+            if (appItems.contains(appItem)) {
+                return;
+            } else {
+                appItems.add(appItem);
+                Collections.sort(appItems, new Comparator<AppItem>() {
+                    @Override
+                    public int compare(AppItem o1, AppItem o2) {
+                        return o2.getName().compareTo(o1.getName());
+                    }
+                });
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    public void removeAppItem(String packag2e) {
+        if (appItems == null) {
+            return;
+        }
+        int i = appItems.indexOf(new AppItem(packag2e));
+        appItems.remove(i);
+        notifyItemRemoved(i);
     }
 
     public class AppItemViewHolder extends RecyclerView.ViewHolder {
