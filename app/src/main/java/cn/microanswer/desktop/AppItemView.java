@@ -3,6 +3,7 @@ package cn.microanswer.desktop;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -15,11 +16,13 @@ import android.widget.Toast;
  * Created by Microanswer on 2018/3/6.
  */
 
-public class AppItemView extends LinearLayout implements View.OnClickListener {
+public class AppItemView extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
 
     private TextView name;
     private ImageView icon;
     private AppItem appItem;
+
+    private boolean isFastApp = false;
 
     public AppItemView(Context context) {
         super(context);
@@ -36,6 +39,14 @@ public class AppItemView extends LinearLayout implements View.OnClickListener {
         init(context, attrs);
     }
 
+    public void setFastApp(boolean fastApp) {
+        isFastApp = fastApp;
+    }
+
+    public boolean isFastApp() {
+        return isFastApp;
+    }
+
     private void init(Context context, AttributeSet attributeSet) {
         inflate(context, R.layout.view_appitem, this);
         setOrientation(VERTICAL);
@@ -45,6 +56,7 @@ public class AppItemView extends LinearLayout implements View.OnClickListener {
         setPadding(pf, pf / 2, pf, pf / 2);
         setClickable(true);
         setOnClickListener(this);
+        setOnLongClickListener(this);
     }
 
     public void bind(AppItem appItem, int position) {
@@ -89,6 +101,16 @@ public class AppItemView extends LinearLayout implements View.OnClickListener {
 
     public OnOpenApp getOnOpenApp() {
         return onOpenApp;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (appItem == null) {
+            Toast.makeText(getContext(), "快捷方式未设置", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        new AppMenuDialog(getContext(), isFastApp).show();
+        return true;
     }
 
     public interface OnOpenApp {

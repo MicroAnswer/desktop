@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
@@ -80,6 +79,7 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         appItemViews = new AppItemView[count];
         for (int i = 0; i < count; i++) {
             appItemViews[i] = (AppItemView) linearLayout.getChildAt(i);
+            appItemViews[i].setFastApp(true);
         }
 
         emptyview = findViewById(R.id.emptyView);
@@ -204,7 +204,7 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         ArrayList<AppItem> appItems = new ArrayList<>();
 
         AppItem set = new AppItem();
-        set.setName("设置项");
+        set.setName("桌面选项");
         set.setIcon(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_set)));
         set.setPkg("sseett");
 
