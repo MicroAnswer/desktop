@@ -1,41 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cn.microanswer.desktop.Group xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.microanswer.desktop.Group
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     app:title="选择要设置的位置">
 
-    <cn.microanswer.desktop.Cell
-        android:id="@+id/setfast1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        app:titLe="快捷图标 1"
-        app:underLine="1px" />
+  <cn.microanswer.desktop.Cell
+      android:id="@+id/setfast1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackground"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      app:titLe="快捷图标 1"
+      app:underLine="1px"/>
 
-    <cn.microanswer.desktop.Cell
-        android:id="@+id/setfast2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        app:titLe="快捷图标 2"
-        app:underLine="1px" />
+  <cn.microanswer.desktop.Cell
+      android:id="@+id/setfast2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackground"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      app:titLe="快捷图标 2"
+      app:underLine="1px"/>
 
-    <cn.microanswer.desktop.Cell
-        android:id="@+id/setfast3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        app:titLe="快捷图标 3"
-        app:underLine="1px" />
+  <cn.microanswer.desktop.Cell
+      android:id="@+id/setfast3"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackground"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      app:titLe="快捷图标 3"
+      app:underLine="1px"/>
 
-    <cn.microanswer.desktop.Cell
-        android:id="@+id/setfast4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        app:titLe="快捷图标 4"
-        app:underLine="1px" />
+  <cn.microanswer.desktop.Cell
+      android:id="@+id/setfast4"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackground"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      app:titLe="快捷图标 4"
+      app:underLine="1px"/>
 
 </cn.microanswer.desktop.Group>

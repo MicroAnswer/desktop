@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titLe="打开"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         app:icon="@drawable/ic_open"
         android:background="?attr/selectableItemBackground"
         app:underLine="1px" />
@@ -18,14 +20,19 @@
         android:id="@+id/setsh"
         android:layout_width="match_parent"
         app:icon="@drawable/ic_settosh"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:background="?attr/selectableItemBackground"
         android:layout_height="wrap_content"
-        app:titLe="设置到快捷图标" />
+        app:titLe="应用到快捷图标" />
 
     <cn.microanswer.desktop.Cell
         android:layout_width="match_parent"
         app:titLe="查看应用信息"
+        android:id="@+id/seeinfo"
         app:icon="@drawable/ic_info"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:background="?attr/selectableItemBackground"
         app:underLine="1px"
         android:layout_height="wrap_content"/>
@@ -34,6 +41,8 @@
         android:id="@+id/uninstall"
         android:layout_width="match_parent"
         app:icon="@drawable/ic_uninstall"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:background="?attr/selectableItemBackground"
         android:layout_height="wrap_content"
         app:titLe="卸载" />

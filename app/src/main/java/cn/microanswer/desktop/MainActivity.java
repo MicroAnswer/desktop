@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MainActivity extends Activity implements AppItemView.OnOpenApp {
     private RecyclerView recyclerView;
@@ -61,10 +63,10 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(Color.TRANSPARENT);
-                window.setNavigationBarColor(Color.TRANSPARENT);
+                window.setNavigationBarColor(Color.parseColor("#55FFFFFF"));
             }
         }
 
@@ -73,14 +75,7 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
     }
 
     private void init() {
-        // 初始化底部5个快捷方式
-        LinearLayout linearLayout = findViewById(R.id.fastapp);
-        int count = linearLayout.getChildCount();
-        appItemViews = new AppItemView[count];
-        for (int i = 0; i < count; i++) {
-            appItemViews[i] = (AppItemView) linearLayout.getChildAt(i);
-            appItemViews[i].setFastApp(true);
-        }
+        initFastApp();
 
         emptyview = findViewById(R.id.emptyView);
 
@@ -104,11 +99,23 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         int i = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (i == PackageManager.PERMISSION_GRANTED) {
             new DataLoader().execute();
-        } else{
+        } else {
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 100);
+        }
+    }
+
+    private void initFastApp() {
+        // 初始化底部5个快捷方式
+        LinearLayout linearLayout = findViewById(R.id.fastapp);
+        int count = linearLayout.getChildCount();
+        appItemViews = new AppItemView[count];
+        for (int i = 0; i < count; i++) {
+            appItemViews[i] = (AppItemView) linearLayout.getChildAt(i);
+            appItemViews[i].setFastApp(true);
+            appItemViews[i].setOnOpenApp(this);
         }
     }
 
@@ -133,7 +140,7 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         }
     }
 
-    private class DataLoader extends AsyncTask<Void, Void, ArrayList<AppItem>> {
+    private class DataLoader extends AsyncTask<Void, Map<String, Object>, ArrayList<AppItem>> {
 
         @Override
         protected ArrayList<AppItem> doInBackground(Void... voids) {
@@ -143,6 +150,29 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
 
                 if (config != null) {
                     JSONObject c = (JSONObject) config;
+
+                    // 获取下方4个快捷方式内容
+                    try {
+                        JSONArray fastapp = c.getJSONArray("fastapp");
+                        if (fastapp != null && fastapp.length() > 0) {
+                            for (int index = 0; index < fastapp.length(); index++) {
+                                JSONObject jsonObject = fastapp.getJSONObject(index);
+                                int i = jsonObject.getInt("index");
+                                String pkg = jsonObject.getString("pkg");
+                                AppItem appItem = Util.getAppItem(MainActivity.this, pkg);
+                                if (appItem != null) {
+                                    TreeMap<String, Object> indval = new TreeMap<>();
+                                    indval.put("index", i);
+                                    indval.put("appitem", appItem);
+                                    publishProgress(indval);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
                     config = c.getJSONArray("hide");
                 }
             } catch (final Exception e) {
@@ -191,6 +221,15 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         }
 
         @Override
+        protected void onProgressUpdate(Map<String, Object>[] values) {
+            super.onProgressUpdate(values);
+            Map<String, Object> indval = values[0];
+            int index = Integer.parseInt(indval.get("index").toString());
+            AppItem appItem = (AppItem) indval.get("appitem");
+            appItemViews[index].setAppItem(appItem);
+        }
+
+        @Override
         protected void onPostExecute(ArrayList<AppItem> appItems) {
             super.onPostExecute(appItems);
             adapter.setAppItems(appItems);
@@ -233,7 +272,6 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
                     continue;
                 }
             }
-
             appItems.add(appInfo); // 添加至列表中
         }
 
@@ -254,6 +292,59 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         adapter.removeAppItem(packa);
     }
 
+    public void setAppItemTo(final int inde22x, final AppItem appItem) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject config = Util.getConfig(MainActivity.this);
+
+                    JSONArray fastapps = null;
+
+                    try {
+                        fastapps = config.getJSONArray("fastapp");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (fastapps == null) {
+                        fastapps = new JSONArray();
+                    }
+
+                    boolean did = false;
+
+                    for (int index = 0; index < fastapps.length(); index++) {
+                        JSONObject o = fastapps.getJSONObject(index);
+                        String pkg = o.getString("pkg");
+                        int ind = o.getInt("index");
+                        if (ind == inde22x) {
+                            o.put("pkg", appItem.getPkg());
+                            fastapps.put(index, o);
+                            did = true;
+                            break;
+                        }
+                    }
+                    if (!did) {
+                        JSONObject o = new JSONObject();
+                        o.put("index", inde22x);
+                        o.put("pkg", appItem.getPkg());
+                        fastapps.put(o);
+                    }
+                    config.put("fastapp", fastapps);
+                    Util.saveConfig(config);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            appItemViews[inde22x].setAppItem(appItem);
+                            Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
     @Override
     public void onBackPressed() {

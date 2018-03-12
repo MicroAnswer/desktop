@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -25,8 +28,40 @@ public class Util {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()));
     }
 
+    public static AppItem getAppItem(Context context, String packageName) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
 
-    public static void open(Activity context, String packagename) throws Exception{
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+            CharSequence charSequence = applicationInfo.loadLabel(packageManager);
+            Drawable drawable = applicationInfo.loadIcon(packageManager);
+            AppItem appItem = new AppItem();
+            appItem.setIcon(drawable);
+            appItem.setName(charSequence.toString());
+            appItem.setPkg(packageName);
+            return appItem;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 写在一个apk
+     *
+     * @param activity
+     * @param packagename
+     */
+    public static void uninstallApk(MainActivity activity, String packagename) {
+        //调用体统卸载程序，删除指定应用。
+        Uri uri = Uri.fromParts("package", packagename, null);
+        //也可以这样写：Uri uri=Uri.parse("package:"+packageName);
+        Intent intentdel = new Intent(Intent.ACTION_DELETE, uri);
+        activity.startActivity(intentdel);
+    }
+
+
+    public static void open(Activity context, String packagename) throws Exception {
         // 通过包名获取此APP详细信息，包括Activities、services、versioncode、name等等
         PackageInfo packageinfo = null;
         try {
@@ -67,20 +102,21 @@ public class Util {
         }
     }
 
-    public static void requestChangeBackground(Context context){
+    public static void requestChangeBackground(Context context) {
         // 生成一个设置壁纸的请求
         final Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
-        Intent chooser = Intent.createChooser(pickWallpaper,"chooser_wallpaper");
+        Intent chooser = Intent.createChooser(pickWallpaper, "chooser_wallpaper");
         //发送设置壁纸的请求
         context.startActivity(chooser);
     }
 
     /**
      * 获取配置文件
+     *
      * @param context
      * @return
      */
-    public static JSONObject getConfig(Context context) throws Exception{
+    public static JSONObject getConfig(Context context) throws Exception {
         File configFileDir = new File(Environment.getExternalStorageDirectory(), ".desktop");
         if (!configFileDir.exists()) {
             if (!configFileDir.mkdirs()) {
@@ -100,4 +136,16 @@ public class Util {
 
     }
 
+    public static void saveConfig(JSONObject config) throws Exception {
+        File configFileDir = new File(Environment.getExternalStorageDirectory(), ".desktop");
+        if (!configFileDir.exists()) {
+            if (!configFileDir.mkdirs()) {
+                throw new Exception("配置文件夹创建失败");
+            }
+        }
+
+        File configFile = new File(configFileDir, "config.cfg");
+
+        Utils.File.writeTxtFile(config.toString(), configFile);
+    }
 }

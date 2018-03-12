@@ -1,22 +1,26 @@
 package cn.microanswer.desktop;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 /**
  * Created by Micro on 2018-3-11.
  */
 
-public class SetFastAppDialog extends Dialog {
+public class SetFastAppDialog extends Dialog implements View.OnClickListener {
 
     private Cell[] cells;
     private AppItem willSetAppItem;
 
-    public SetFastAppDialog(@NonNull Context context, AppItem willSetAppItem) {
-        super(context);
+    private MainActivity activity;
+
+    public SetFastAppDialog(@NonNull MainActivity context, AppItem willSetAppItem) {
+        super(context, R.style.Theme_AppCompat_DayNight_Dialog);
+        this.activity = context;
         this.willSetAppItem = willSetAppItem;
     }
 
@@ -29,6 +33,10 @@ public class SetFastAppDialog extends Dialog {
         cells[1] = findViewById(R.id.setfast2);
         cells[2] = findViewById(R.id.setfast3);
         cells[3] = findViewById(R.id.setfast4);
+
+        for (int index = 0; index < cells.length; index++) {
+            cells[index].setOnClickListener(this);
+        }
     }
 
     @Override
@@ -39,5 +47,20 @@ public class SetFastAppDialog extends Dialog {
         getWindow().setAttributes(attributes);
 
         super.onStart();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == cells[0]) {
+            activity.setAppItemTo(0, willSetAppItem);
+        } else if (v == cells[1]) {
+            activity.setAppItemTo(1, willSetAppItem);
+        } else if (v == cells[2]) {
+            activity.setAppItemTo(2, willSetAppItem);
+        } else if (v == cells[3]) {
+            activity.setAppItemTo(3, willSetAppItem);
+        }
+        // Toast.makeText(activity, "设置成功", Toast.LENGTH_SHORT).show();
+        dismiss();
     }
 }

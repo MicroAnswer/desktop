@@ -3,7 +3,6 @@ package cn.microanswer.desktop;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -67,8 +66,10 @@ public class AppItemView extends LinearLayout implements View.OnClickListener, V
         if (icon == null) {
             icon = (ImageView) getChildAt(0);
         }
-        name.setVisibility(VISIBLE);
-        name.setText(String.valueOf(appItem.getName()));
+        if (!isFastApp()) {
+            name.setVisibility(VISIBLE);
+            name.setText(String.valueOf(appItem.getName()));
+        }
         if (appItem.getIcon() != null) {
             icon.setImageDrawable(appItem.getIcon());
         }
@@ -109,8 +110,14 @@ public class AppItemView extends LinearLayout implements View.OnClickListener, V
             Toast.makeText(getContext(), "快捷方式未设置", Toast.LENGTH_SHORT).show();
             return true;
         }
-        new AppMenuDialog(getContext(), isFastApp).show();
+        AppMenuDialog appMenuDialog = new AppMenuDialog((MainActivity) getContext(), isFastApp);
+        appMenuDialog.setAppItem(appItem);
+        appMenuDialog.show();
         return true;
+    }
+
+    public void setAppItem(AppItem appItem) {
+        this.bind(appItem, 0);
     }
 
     public interface OnOpenApp {

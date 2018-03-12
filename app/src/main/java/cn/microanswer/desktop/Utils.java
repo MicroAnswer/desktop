@@ -10,8 +10,11 @@ import android.util.TypedValue;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -137,6 +140,15 @@ public class Utils {
             return readTxtFile(new java.io.File(gfile), charset);
         }
 
+        public static void writeTxtFile(String s, java.io.File file) throws Exception{
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+            bufferedWriter.write(s);
+            bufferedWriter.flush();
+            writer.flush();
+            fileOutputStream.flush();
+        }
     }
 
     /**
