@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         app:desc="重新加载所有安装的应用"
+        android:paddingLeft="10dp"
         app:titLe="刷新"
         app:underLine="1px">
 
@@ -40,6 +41,7 @@
     <cn.microanswer.desktop.Cell
         android:id="@+id/changeBg"
         android:layout_width="match_parent"
+        android:paddingLeft="10dp"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         app:desc="切换一张新的主页背景"
@@ -61,8 +63,10 @@
       app:title="关于">
 
     <cn.microanswer.desktop.Cell
+        android:id="@+id/update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:background="?attr/selectableItemBackground"
         app:desc="v1.0.0"
         app:titLe="版本更新">

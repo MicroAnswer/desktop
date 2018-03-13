@@ -105,7 +105,7 @@ public class Util {
     public static void requestChangeBackground(Context context) {
         // 生成一个设置壁纸的请求
         final Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
-        Intent chooser = Intent.createChooser(pickWallpaper, "chooser_wallpaper");
+        Intent chooser = Intent.createChooser(pickWallpaper, "选择一个应用");
         //发送设置壁纸的请求
         context.startActivity(chooser);
     }
