@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.data;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+
+import cn.microanswer.desktop.ui.MainActivity;
 
 /**
  * Created by Micro on 2018-3-11.

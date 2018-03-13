@@ -1,5 +1,6 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,12 +10,18 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.json.JSONObject;
+
+import cn.microanswer.desktop.R;
+import cn.microanswer.desktop.other.Util;
+import cn.microanswer.desktop.other.Utils;
+
 /**
  * Created by Microanswer on 2018/3/7.
  */
 
 public class SetActivity extends AppCompatActivity implements View.OnClickListener {
-    private Cell changeBg, refresh, update;
+    private Cell changeBg, refresh, update, showConfig;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,9 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
 
         update = findViewById(R.id.update);
         update.setOnClickListener(this);
+
+        showConfig = findViewById(R.id.showConfig);
+        showConfig.setOnClickListener(this);
     }
 
     @Override
@@ -55,9 +65,19 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
         if (v == changeBg) {
             Util.requestChangeBackground(this);
         } else if (v == refresh) {
-            new MainActivity.DataLoader().execute();
+
+            Intent intent = new Intent("reloadApp");
+            sendBroadcast(intent);
+
         } else if (v == update) {
 
+        } else if (v == showConfig) {
+            try {
+                JSONObject config = Util.getConfig(this);
+                Utils.UI.alert(this, config.toString(2));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

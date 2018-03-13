@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import cn.microanswer.desktop.data.AppItem;
+import cn.microanswer.desktop.ui.AppItemView;
+import cn.microanswer.desktop.ui.MainActivity;
 
 /**
  * Created by Microanswer on 2018/3/6.

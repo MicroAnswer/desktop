@@ -48,25 +48,25 @@
       android:background="@color/dockbg"
       android:orientation="horizontal">
 
-    <cn.microanswer.desktop.AppItemView
+    <cn.microanswer.desktop.ui.AppItemView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"/>
 
-    <cn.microanswer.desktop.AppItemView
+    <cn.microanswer.desktop.ui.AppItemView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"/>
 
-    <cn.microanswer.desktop.AppItemView
+    <cn.microanswer.desktop.ui.AppItemView
         android:layout_width="0dp"
         android:gravity="center"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
-    <cn.microanswer.desktop.AppItemView
+    <cn.microanswer.desktop.ui.AppItemView
         android:layout_width="0dp"
         android:gravity="center"
         android:layout_height="match_parent"

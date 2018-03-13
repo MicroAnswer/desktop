@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cn.microanswer.desktop.Group xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.microanswer.desktop.ui.Group xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:title="菜单">
 
-    <cn.microanswer.desktop.Cell
+    <cn.microanswer.desktop.ui.Cell
         android:id="@+id/open"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:background="?attr/selectableItemBackground"
         app:underLine="1px" />
 
-    <cn.microanswer.desktop.Cell
+    <cn.microanswer.desktop.ui.Cell
         android:id="@+id/setsh"
         android:layout_width="match_parent"
         app:icon="@drawable/ic_settosh"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         app:titLe="应用到快捷图标" />
 
-    <cn.microanswer.desktop.Cell
+    <cn.microanswer.desktop.ui.Cell
         android:layout_width="match_parent"
         app:titLe="查看应用信息"
         android:id="@+id/seeinfo"
@@ -37,7 +37,7 @@
         app:underLine="1px"
         android:layout_height="wrap_content"/>
 
-    <cn.microanswer.desktop.Cell
+    <cn.microanswer.desktop.ui.Cell
         android:id="@+id/uninstall"
         android:layout_width="match_parent"
         app:icon="@drawable/ic_uninstall"
@@ -47,4 +47,4 @@
         android:layout_height="wrap_content"
         app:titLe="卸载" />
 
-</cn.microanswer.desktop.Group>
+</cn.microanswer.desktop.ui.Group>

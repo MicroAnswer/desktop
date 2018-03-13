@@ -12,7 +12,7 @@
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
     <activity
-        android:name=".MainActivity"
+        android:name=".ui.MainActivity"
         android:screenOrientation="portrait"
         android:launchMode="singleInstance">
       <intent-filter>
@@ -24,13 +24,13 @@
       </intent-filter>
     </activity>
     <activity
-        android:name=".SetActivity"
+        android:name=".ui.SetActivity"
         android:screenOrientation="portrait"
         android:theme="@style/BaseActivityTheme"
         android:label="@string/set"/>
 
     <service
-        android:name=".MLiveWallpaper"
+        android:name=".other.MLiveWallpaper"
         android:enabled="true"
         android:label="@string/livewallpaperName"
         android:permission="android.permission.BIND_WALLPAPER">

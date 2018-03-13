@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import cn.microanswer.desktop.data.AppItem;
+import cn.microanswer.desktop.R;
+import cn.microanswer.desktop.other.Util;
 
 /**
  * Created by Microanswer on 2018/3/6.

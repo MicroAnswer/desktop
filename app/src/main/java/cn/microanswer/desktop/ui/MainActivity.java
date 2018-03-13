@@ -1,23 +1,19 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,29 +23,29 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
-public class MainActivity extends Activity implements AppItemView.OnOpenApp {
+import cn.microanswer.desktop.R;
+import cn.microanswer.desktop.adapter.GridRecyclerViewAdapter;
+import cn.microanswer.desktop.data.AppChangeReceiver;
+import cn.microanswer.desktop.data.AppItem;
+import cn.microanswer.desktop.data.AppItemLoader;
+import cn.microanswer.desktop.other.Util;
+import cn.microanswer.desktop.other.Utils;
+
+public class MainActivity extends Activity implements AppItemView.OnOpenApp, AppItemLoader.OnLoadedListener {
     private RecyclerView recyclerView;
     private View emptyview;
     private AppItemView[] appItemViews;
 
     private GridLayoutManager layoutManager;
     private GridRecyclerViewAdapter adapter;
-    private static ArrayList<AppItem> appItems;
 
     private AppChangeReceiver changeReceiver;
     private IntentFilter intentFilter;
 
-    private Object config;
-
+    private AppItemLoader appItemLoader;
+    private ReLoadAppReceiver reLoadAppReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +69,12 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
 
 
         init();
+
+        // 初始化广播接收器，用于重新加载app的接收
+        reLoadAppReceiver = new ReLoadAppReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("reloadApp");
+        registerReceiver(reLoadAppReceiver, intentFilter);
     }
 
     private void init() {
@@ -97,14 +99,18 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         changeReceiver = new AppChangeReceiver(this);
         registerReceiver(changeReceiver, intentFilter);
 
-        int i = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int i = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (i == PackageManager.PERMISSION_GRANTED) {
-            new DataLoader().execute();
+            appItemLoader = new AppItemLoader(this);
+            appItemLoader.execute(this);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, 100);
+            String[] ps = new String[2];
+            ps[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            ps[1] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                ps[0] = Manifest.permission.READ_EXTERNAL_STORAGE;
+            }
+            ActivityCompat.requestPermissions(this, ps, 100);
         }
     }
 
@@ -125,7 +131,8 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                new DataLoader().execute();
+                appItemLoader = new AppItemLoader(this);
+                appItemLoader.execute(this);
             } else {
                 Utils.UI.alert(this, "授权失败");
             }
@@ -141,55 +148,6 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         }
     }
 
-
-
-
-    // 获得所有启动Activity的信息，类似于Launch界面
-    public ArrayList<AppItem> queryAppInfo(FilenameFilter filenameFilter) {
-        ArrayList<AppItem> appItems = new ArrayList<>();
-
-        AppItem set = new AppItem();
-        set.setName("桌面选项");
-        set.setIcon(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_set)));
-        set.setPkg("sseett");
-
-        appItems.add(set);
-        PackageManager pm = this.getPackageManager(); // 获得PackageManager对象
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        // 通过查询，获得所有ResolveInfo对象.
-        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(mainIntent, 0);
-        for (ResolveInfo reInfo : resolveInfos) {
-            String pkgName = reInfo.activityInfo.packageName; // 获得应用程序的包名
-
-            String saf = pkgName.toLowerCase();
-            String appLabel = (String) reInfo.loadLabel(pm); // 获得应用程序的Label
-            Drawable icon = reInfo.loadIcon(pm); // 获得应用程序图标
-            Log.i("size", "icon, class=" + icon.getClass().getSimpleName());
-
-            // 创建一个AppInfo对象，并赋值
-            AppItem appInfo = new AppItem();
-            appInfo.setName(appLabel);
-            appInfo.setPkg(pkgName);
-            appInfo.setIcon(icon);
-
-            if (filenameFilter != null) {
-                if (!filenameFilter.accept(null, appInfo.toString())) {
-                    continue;
-                }
-            }
-            appItems.add(appInfo); // 添加至列表中
-        }
-
-        Collections.sort(appItems, new Comparator<AppItem>() {
-            @Override
-            public int compare(AppItem o1, AppItem o2) {
-                return o2.getName().compareTo(o1.getName());
-            }
-        });
-        return appItems;
-    }
-
     public void addAppItem(AppItem appItem) {
         adapter.addAppItem(appItem);
     }
@@ -199,8 +157,7 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
     }
 
     public void setAppItemTo(final int inde22x, final AppItem appItem) {
-
-        new Thread(new Runnable() {
+        Util.runInThread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -249,7 +206,7 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
     }
 
     @Override
@@ -262,8 +219,35 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp {
         super.onDestroy();
         try {
             unregisterReceiver(changeReceiver);
+            unregisterReceiver(reLoadAppReceiver);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void beforLoad() {
+        emptyview.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onFastAppLoad(int inex, AppItem appItem) {
+        appItemViews[inex].setAppItem(appItem);
+    }
+
+    @Override
+    public void onAllAppLoad(ArrayList<AppItem> appItems) {
+        adapter.setAppItems(appItems);
+        emptyview.setVisibility(View.GONE);
+        Toast.makeText(this, "加载完成", Toast.LENGTH_SHORT).show();
+    }
+
+    private class ReLoadAppReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            appItemLoader = new AppItemLoader(MainActivity.this);
+            appItemLoader.execute(context);
         }
     }
 }

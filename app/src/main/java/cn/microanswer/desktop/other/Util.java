@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.other;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -18,6 +19,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
+
+import cn.microanswer.desktop.data.AppItem;
+import cn.microanswer.desktop.ui.MainActivity;
 
 /**
  * Created by Microanswer on 2018/3/6.
@@ -44,6 +48,12 @@ public class Util {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static AsyncTask runInThread(Runnable... runnable) {
+        SimpalTask simpalTask = new SimpalTask();
+        simpalTask.execute(runnable);
+        return simpalTask;
     }
 
     /**

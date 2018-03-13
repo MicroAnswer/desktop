@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +9,10 @@ import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import cn.microanswer.desktop.data.AppItem;
+import cn.microanswer.desktop.R;
+import cn.microanswer.desktop.other.Util;
 
 /**
  * Created by Micro on 2018-3-11.

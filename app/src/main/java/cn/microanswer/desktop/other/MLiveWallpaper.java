@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.other;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.hardware.SensorManager;
 import android.os.SystemClock;
 import android.service.wallpaper.WallpaperService;
 import android.view.SurfaceHolder;
+
+import cn.microanswer.desktop.R;
 
 /**
  * Created by Microanswer on 2018/3/6.

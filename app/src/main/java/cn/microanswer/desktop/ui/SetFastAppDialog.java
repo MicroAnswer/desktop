@@ -1,11 +1,13 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
+
+import cn.microanswer.desktop.data.AppItem;
+import cn.microanswer.desktop.R;
 
 /**
  * Created by Micro on 2018-3-11.

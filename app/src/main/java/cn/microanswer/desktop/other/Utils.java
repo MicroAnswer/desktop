@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.other;
 
 import android.content.Context;
 import android.content.DialogInterface;

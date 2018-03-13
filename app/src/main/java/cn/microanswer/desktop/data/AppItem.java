@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.data;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;

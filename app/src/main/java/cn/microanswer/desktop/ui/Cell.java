@@ -1,4 +1,4 @@
-package cn.microanswer.desktop;
+package cn.microanswer.desktop.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import cn.microanswer.desktop.R;
+import cn.microanswer.desktop.other.Utils;
 
 /**
  * 一个Cell
