@@ -65,7 +65,7 @@ public class Utils {
          * @param dp
          * @return
          */
-        public static int dp2px(Context context, int dp) {
+        public static int dp2px(Context context, float dp) {
             return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()));
         }
 

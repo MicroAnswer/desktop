@@ -28,6 +28,9 @@ import cn.microanswer.desktop.ui.MainActivity;
  */
 
 public class Util {
+
+    private static JSONObject config;
+
     public static int dp2px(Context context, float dp) {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()));
     }
@@ -44,7 +47,7 @@ public class Util {
             appItem.setName(charSequence.toString());
             appItem.setPkg(packageName);
             return appItem;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -127,6 +130,9 @@ public class Util {
      * @return
      */
     public static JSONObject getConfig(Context context) throws Exception {
+        if (config != null) {
+            return config;
+        }
         File configFileDir = new File(Environment.getExternalStorageDirectory(), ".desktop");
         if (!configFileDir.exists()) {
             if (!configFileDir.mkdirs()) {
@@ -141,7 +147,8 @@ public class Util {
             return new JSONObject();
         } else {
             // 配置文件存在;
-            return new JSONObject(Utils.File.readTxtFile(configFile));
+            config = new JSONObject(Utils.File.readTxtFile(configFile));
+            return config;
         }
 
     }
@@ -157,5 +164,7 @@ public class Util {
         File configFile = new File(configFileDir, "config.cfg");
 
         Utils.File.writeTxtFile(config.toString(), configFile);
+
+        Util.config = config;
     }
 }

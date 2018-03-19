@@ -1,6 +1,9 @@
 <resources>
-  <string name="app_name">Desktop</string>
-  <string name="livewallpaperName">My livepaper</string>
-  <string name="icondescription">the icon of application</string>
-  <string name="set">设置</string>
+    <string name="app_name">Desktop</string>
+    <string name="livewallpaperName">My livepaper</string>
+    <string name="icondescription">the icon of application</string>
+    <string name="set">设置</string>
+    <string name="admincheck">管理员验证</string>
+    <string name="admintip">　　要继续操作，需先要通过管理员验证，请在下方绘制管理员图案，通过管理员验证后即可继续您的操作。</string>
+    <string name="pleaseinputadminpic">请绘制管理员图案</string>
 </resources>

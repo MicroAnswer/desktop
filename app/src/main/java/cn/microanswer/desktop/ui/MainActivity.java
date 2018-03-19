@@ -142,6 +142,28 @@ public class MainActivity extends Activity implements AppItemView.OnOpenApp, App
     @Override
     public void doOpen(String pkg) {
         try {
+            JSONObject config = Util.getConfig(this);
+
+            JSONObject lockapps = null;
+            try {
+                lockapps = config.getJSONObject("lockapps");
+            } catch (Exception e1) {
+                lockapps = null;
+            }
+            if (lockapps != null) {
+                String string=null;
+                try {
+                    string = lockapps.getString(pkg);
+                }catch (Exception e2){string=null;}
+                if (string!=null) {
+                    Intent intent = new Intent(this, AdminCheckActivity.class);
+                    intent.putExtra("type", "openapp");
+                    intent.putExtra("pkg", pkg);
+                    intent.putExtra("pwd", string);
+                    startActivity(intent);
+                    return;
+                }
+            }
             Util.open(this, pkg);
         } catch (Exception e) {
             Toast.makeText(this, "打不开：" + e.getMessage(), Toast.LENGTH_SHORT).show();

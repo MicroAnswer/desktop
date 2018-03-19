@@ -84,7 +84,9 @@ public class AppItemView extends LinearLayout implements View.OnClickListener, V
         if (appItem != null && appItem.getPkg() != null) {
 
             if (appItem.getPkg().equals("sseett")) {
-                getContext().startActivity(new Intent(getContext(), SetActivity.class));
+                Intent i = new Intent(getContext(), AdminCheckActivity.class);
+                i.putExtra("type", "openset");
+                getContext().startActivity(i);
                 return;
             }
 
