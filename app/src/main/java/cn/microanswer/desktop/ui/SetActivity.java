@@ -21,7 +21,7 @@ import cn.microanswer.desktop.other.Utils;
  */
 
 public class SetActivity extends AppCompatActivity implements View.OnClickListener {
-    private Cell changeBg, refresh, update, showConfig;
+    private Cell changeBg, refresh, update,editConfig,applock;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +56,11 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
         update = findViewById(R.id.update);
         update.setOnClickListener(this);
 
-        showConfig = findViewById(R.id.showConfig);
-        showConfig.setOnClickListener(this);
+        editConfig = findViewById(R.id.editconfig);
+        editConfig.setOnClickListener(this);
+
+        applock = findViewById(R.id.applock);
+        applock.setOnClickListener(this);
     }
 
     @Override
@@ -71,13 +74,10 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
 
         } else if (v == update) {
 
-        } else if (v == showConfig) {
-            try {
-                JSONObject config = Util.getConfig(this);
-                Utils.UI.alert(this, config.toString(2));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } else if (v == editConfig) {
+             startActivity(new Intent(this, EditConfigActivity.class));
+        } else if (v == applock) {
+
         }
     }
 }

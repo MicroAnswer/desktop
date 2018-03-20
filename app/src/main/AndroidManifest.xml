@@ -1,56 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.microanswer.desktop">
+          package="cn.microanswer.desktop">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.MainActivity"
-            android:launchMode="singleInstance"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme">
+    <activity
+        android:name=".ui.MainActivity"
+        android:excludeFromRecents="true"
+        android:launchMode="singleInstance"
+        android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.SetActivity"
-            android:label="@string/set"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseActivityTheme" />
-        <activity
-            android:name=".ui.AdminCheckActivity"
-            android:label="@string/admincheck"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseActivityTheme" />
+        <category android:name="android.intent.category.HOME"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity
+        android:name=".ui.SetActivity"
+        android:excludeFromRecents="true"
+        android:label="@string/set"
+        android:screenOrientation="portrait"
+        android:theme="@style/BaseActivityTheme"/>
+    <activity
+        android:name=".ui.AdminCheckActivity"
+        android:excludeFromRecents="true"
+        android:label="@string/admincheck"
+        android:launchMode="singleInstance"
+        android:screenOrientation="portrait"
+        android:theme="@style/BaseActivityTheme"/>
 
-        <service
-            android:name=".other.MLiveWallpaper"
-            android:enabled="true"
-            android:label="@string/livewallpaperName"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/livewallpaper" />
-        </service>
+    <activity
+        android:name=".ui.EditConfigActivity"
+        android:label="编辑配置文件"
+        android:screenOrientation="portrait"
+        android:theme="@style/Theme.AppCompat.DayNight"/>
 
-    </application>
+    <service
+        android:name=".other.MLiveWallpaper"
+        android:enabled="true"
+        android:label="@string/livewallpaperName"
+        android:permission="android.permission.BIND_WALLPAPER">
+      <intent-filter>
+        <action android:name="android.service.wallpaper.WallpaperService"/>
+      </intent-filter>
+      <meta-data
+          android:name="android.service.wallpaper"
+          android:resource="@xml/livewallpaper"/>
+    </service>
+
+  </application>
 
 </manifest>

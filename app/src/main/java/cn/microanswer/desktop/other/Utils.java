@@ -21,6 +21,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 
+import cn.microanswer.desktop.ui.EditConfigActivity;
+
 /**
  * 工具类
  * Created by Microanswer on 2018/1/11.
@@ -119,6 +121,15 @@ public class Utils {
                     .setPositiveButton("确定", onClickListener).create();
             alertDialog.show();
             return alertDialog;
+        }
+
+        public static void confirm(Context c, String s, DialogInterface.OnClickListener onClickListener) {
+            AlertDialog alertDialog = new AlertDialog.Builder(c).create();
+            alertDialog.setTitle("提示");
+            alertDialog.setMessage(s);
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "确定", onClickListener);
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "取消", (DialogInterface.OnClickListener) null);
+            alertDialog.show();
         }
     }
 

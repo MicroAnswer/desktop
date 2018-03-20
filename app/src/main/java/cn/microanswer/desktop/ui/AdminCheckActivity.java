@@ -69,12 +69,29 @@ public class AdminCheckActivity extends AppCompatActivity implements Runnable {
         picLock = findViewById(R.id.piclock);
         hint = findViewById(R.id.hint);
 
-        trues = new ArrayList<>();
-        trues.add(picLock.newDot("00"));
-        trues.add(picLock.newDot("10"));
-        trues.add(picLock.newDot("01"));
-        trues.add(picLock.newDot("11"));
-        trues.add(picLock.newDot("21"));
+        Intent intent = getIntent();
+        String type = intent.getStringExtra("type");
+        if ("openapp".equals(type)) {
+            String pwd = intent.getStringExtra("pwd");
+            String[] split = pwd.split(",");
+            if (split.length > 2) {
+                hint.setText("此应用已加密，请输入图案继续打开应用。");
+                trues = new ArrayList<>();
+                trues.add(picLock.newDot(split[0]));
+                trues.add(picLock.newDot(split[1]));
+                trues.add(picLock.newDot(split[2]));
+                trues.add(picLock.newDot(split[3]));
+                trues.add(picLock.newDot(split[4]));
+            }
+        }
+        if (trues == null || trues.size() <= 2) {
+            trues = new ArrayList<>();
+            trues.add(picLock.newDot("00"));
+            trues.add(picLock.newDot("10"));
+            trues.add(picLock.newDot("01"));
+            trues.add(picLock.newDot("11"));
+            trues.add(picLock.newDot("21"));
+        }
         paused = false;
 
         picLock.setOnResultListener(new PicLockListener());
@@ -166,6 +183,7 @@ public class AdminCheckActivity extends AppCompatActivity implements Runnable {
         String txt = MessageFormat.format("请等待 {0} 秒钟后再进行图案绘制", String.valueOf(time / 1000));
         currentWaitTime = time - 1000;
         if (time < 0) {
+            picLock.setTryCount(0);
             picLock.setDisabled(false);
             txt = "请绘制管理员图案";
             hint.setText(txt);

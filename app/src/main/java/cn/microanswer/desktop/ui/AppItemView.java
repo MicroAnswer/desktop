@@ -116,6 +116,9 @@ public class AppItemView extends LinearLayout implements View.OnClickListener, V
             Toast.makeText(getContext(), "快捷方式未设置", Toast.LENGTH_SHORT).show();
             return true;
         }
+        if ("sseett".equals(appItem.getPkg())) {
+            return false;
+        }
         AppMenuDialog appMenuDialog = new AppMenuDialog((MainActivity) getContext(), isFastApp);
         appMenuDialog.setAppItem(appItem);
         appMenuDialog.show();
