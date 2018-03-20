@@ -124,7 +124,7 @@ public class AppItemLoader extends AsyncTask<Context, Map<String, Object>, Array
 
         AppItem set = new AppItem();
         set.setName("桌面选项");
-        set.setIcon(new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_set)));
+        set.setIcon(new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher)));
         set.setPkg("sseett");
 
         appItems.add(set);
