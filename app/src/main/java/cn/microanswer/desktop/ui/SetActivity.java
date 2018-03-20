@@ -10,18 +10,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import org.json.JSONObject;
-
 import cn.microanswer.desktop.R;
 import cn.microanswer.desktop.other.Util;
-import cn.microanswer.desktop.other.Utils;
 
 /**
  * Created by Microanswer on 2018/3/7.
  */
 
 public class SetActivity extends AppCompatActivity implements View.OnClickListener {
-    private Cell changeBg, refresh, update,editConfig,applock;
+    private Cell changeBg, refresh, update, editConfig;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +44,7 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
         init();
     }
 
-    private void init(){
+    private void init() {
         changeBg = findViewById(R.id.changeBg);
         changeBg.setOnClickListener(this);
 
@@ -59,8 +57,6 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
         editConfig = findViewById(R.id.editconfig);
         editConfig.setOnClickListener(this);
 
-        applock = findViewById(R.id.applock);
-        applock.setOnClickListener(this);
     }
 
     @Override
@@ -75,9 +71,7 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
         } else if (v == update) {
 
         } else if (v == editConfig) {
-             startActivity(new Intent(this, EditConfigActivity.class));
-        } else if (v == applock) {
-
+            startActivity(new Intent(this, EditConfigActivity.class));
         }
     }
 }

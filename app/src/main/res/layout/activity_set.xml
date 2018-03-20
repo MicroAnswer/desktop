@@ -64,23 +64,6 @@
 
     <cn.microanswer.desktop.ui.Cell
         android:layout_width="match_parent"
-        android:paddingLeft="10dp"
-        android:background="?attr/selectableItemBackground"
-        app:underLine="1px"
-        android:id="@+id/applock"
-        app:titLe="应用加密"
-        android:layout_height="wrap_content">
-
-      <ImageView
-          android:layout_width="30dp"
-          android:layout_height="30dp"
-          android:layout_marginRight="15dp"
-          android:src="@drawable/ic_icon_right"/>
-
-    </cn.microanswer.desktop.ui.Cell>
-
-    <cn.microanswer.desktop.ui.Cell
-        android:layout_width="match_parent"
         android:id="@+id/editconfig"
         android:background="?attr/selectableItemBackground"
         android:paddingLeft="10dp"

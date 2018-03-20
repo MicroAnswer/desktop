@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +12,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import cn.microanswer.desktop.R;
-import cn.microanswer.desktop.other.Util;
 
 /**
  * 用于进行管理员验证的activity
@@ -69,29 +66,12 @@ public class AdminCheckActivity extends AppCompatActivity implements Runnable {
         picLock = findViewById(R.id.piclock);
         hint = findViewById(R.id.hint);
 
-        Intent intent = getIntent();
-        String type = intent.getStringExtra("type");
-        if ("openapp".equals(type)) {
-            String pwd = intent.getStringExtra("pwd");
-            String[] split = pwd.split(",");
-            if (split.length > 2) {
-                hint.setText("此应用已加密，请输入图案继续打开应用。");
-                trues = new ArrayList<>();
-                trues.add(picLock.newDot(split[0]));
-                trues.add(picLock.newDot(split[1]));
-                trues.add(picLock.newDot(split[2]));
-                trues.add(picLock.newDot(split[3]));
-                trues.add(picLock.newDot(split[4]));
-            }
-        }
-        if (trues == null || trues.size() <= 2) {
-            trues = new ArrayList<>();
-            trues.add(picLock.newDot("00"));
-            trues.add(picLock.newDot("10"));
-            trues.add(picLock.newDot("01"));
-            trues.add(picLock.newDot("11"));
-            trues.add(picLock.newDot("21"));
-        }
+        trues = new ArrayList<>();
+        trues.add(picLock.newDot("00"));
+        trues.add(picLock.newDot("10"));
+        trues.add(picLock.newDot("01"));
+        trues.add(picLock.newDot("11"));
+        trues.add(picLock.newDot("21"));
         paused = false;
 
         picLock.setOnResultListener(new PicLockListener());
@@ -158,15 +138,7 @@ public class AdminCheckActivity extends AppCompatActivity implements Runnable {
             Intent intent = getIntent();
 
             String type = intent.getStringExtra("type");
-            if ("openapp".equals(type)) {
-                String pkg = intent.getStringExtra("pkg");
-                try {
-                    Util.open(AdminCheckActivity.this, pkg);
-                    finish();
-                } catch (Exception e) {
-                    Toast.makeText(AdminCheckActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            } else if ("openset".equals(type)) {
+            if ("openset".equals(type)) {
                 startActivity(new Intent(AdminCheckActivity.this, SetActivity.class));
                 finish();
             }
